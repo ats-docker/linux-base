@@ -6,7 +6,7 @@ ARG MAVEN_VERSION="3.8.8"
 ARG JDK_VERSION="19.0.2"
 
 ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
-ARG JDK_DOWNLOAD="https://download.java.net/java/GA/jdk19.0.2/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz"
+ARG JDK_DOWNLOAD="https://download.java.net/java/GA/jdk${JDK_VERSION}/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz"
 
 RUN apt-get update && apt-get install -y wget libfreetype6 git curl bzip2 zip unzip \
     && apt-get install -y --no-install-recommends nvi \
