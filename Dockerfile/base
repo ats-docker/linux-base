@@ -22,7 +22,8 @@ RUN apt-get update && apt-get install -y wget libfreetype6 git curl bzip2 zip un
     && apt-get autoremove \
     && apt-get clean 
 
-# Définir les variables d'environnement pour Java
+# Define env variables for Java
+
 ENV JAVA_HOME /usr/bin/jdk-${JDK_VERSION}
 ENV M2_HOME /opt/maven
 ENV MAVEN_HOME /opt/maven
