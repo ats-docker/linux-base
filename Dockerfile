@@ -2,7 +2,7 @@
 # syntax=docker/dockerfile:1
 
 FROM ubuntu:jammy
-ARG MAVEN_VERSION="3.8.8"
+ARG MAVEN_VERSION="3.9.3"
 ARG JDK_VERSION="19.0.2"
 
 ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
