@@ -1,6 +1,6 @@
+## ActionTestScript linux-base
 ---
-
-Linux base machine with tools used by ATS components
+Linux base machine with minimalistic tools to launch ATS test execution
 
 ## Quick Start
 
