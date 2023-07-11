@@ -24,10 +24,11 @@ RUN curl -o /tmp/maven.tar.gz ${MAVEN_DOWNLOAD} \
     && tar -xzvf /tmp/maven.tar.gz -C /opt \
     && mv /opt/apache-maven-${MAVEN_VERSION} /opt/maven 
 
-RUN useradd -m ats-user  \
-    && rm -rf /tmp/* \
-    && apt-get autoremove \
-    && apt-get clean 
+RUN deluser --remove-home ubuntu 
+RUN  useradd -m ats-user  \
+  && rm -rf /tmp/* \
+  && apt-get autoremove \
+  && apt-get clean 
 
 # Define env variables for Java
 
