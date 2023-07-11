@@ -3,10 +3,10 @@
 
 FROM ubuntu:lunar
 ARG MAVEN_VERSION="3.9.3"
-ARG JDK_VERSION="19.0.2"
+ARG JDK_VERSION="20.0.1"
 
 ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
-ARG JDK_DOWNLOAD="https://download.java.net/java/GA/jdk${JDK_VERSION}/fdb695a9d9064ad6b064dc6df578380c/7/GPL/openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz"
+ARG JDK_DOWNLOAD="https://download.java.net/java/GA/jdk${JDK_VERSION}/b4887098932d415489976708ad6d1a4b/9/GPL/openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz"	  
 
 RUN apt-get update  
 RUN apt-get install -y libfreetype6 
