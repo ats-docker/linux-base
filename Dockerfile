@@ -2,7 +2,7 @@
 # syntax=docker/dockerfile:1
 
 FROM ubuntu:lunar
-ARG MAVEN_VERSION="3.9.3"
+ARG MAVEN_VERSION="3.9.4"
 ARG JDK_VERSION="20.0.1"
 
 ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
@@ -15,7 +15,9 @@ RUN apt-get install -y curl
 RUN apt-get install -y bzip2 
 RUN apt-get install -y zip
 RUN apt-get install -y unzip 
-RUN apt-get install -y --no-install-recommends nvi 
+RUN apt-get install -y --no-install-recommends nvi
+RUN apt-get install -y psmisc
+RUN apt-get install -y iproute2 
 RUN cd /tmp \
     && curl -o openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz ${JDK_DOWNLOAD} \
     && tar -xzvf openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz \
