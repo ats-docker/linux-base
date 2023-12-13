@@ -2,7 +2,7 @@
 # syntax=docker/dockerfile:1
 
 FROM ubuntu:lunar
-ARG MAVEN_VERSION="3.9.4"
+ARG MAVEN_VERSION="3.9.6"
 ARG JDK_VERSION="20.0.1"
 
 ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 

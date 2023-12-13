@@ -25,5 +25,7 @@ Image based images. It build from ubuntu:lunar. It contains the following packag
   - zip
   - bzip2
   - nvi
-  - java openjdk 19.0.2
-  - maven mvn 3.9.3
+  - psmisc
+  - iproute2
+  - java openjdk 20.0.1
+  - maven mvn 3.9.6
