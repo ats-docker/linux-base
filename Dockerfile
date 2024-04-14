@@ -3,7 +3,7 @@
 
 FROM ubuntu:lunar
 ARG MAVEN_VERSION="3.9.6"
-ARG JDK_VERSION="21.0.1"
+ARG JDK_VERSION="22"
 
 ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
 #ARG JDK_DOWNLOAD="https://download.java.net/java/GA/jdk${JDK_VERSION}/b4887098932d415489976708ad6d1a4b/9/GPL/openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz"	  
