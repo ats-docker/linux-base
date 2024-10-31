@@ -1,11 +1,12 @@
 # Dockerfile
 # syntax=docker/dockerfile:1
 
-FROM ubuntu:latest
+FROM ubuntu:24.10
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends nvi
 RUN apt-get install -y \
+  sudo \
   build-essential \
   libfreetype6 \
   xserver-xorg-core \
@@ -101,32 +102,6 @@ RUN cd /tmp \
 RUN ln -s /usr/bin/jdk-${JDK_VERSION} ${JAVA_HOME}
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-#-----------------------------------------------------------------------------------------------------------------------------------------------------
-ARG MAVEN_VERSION="3.9.9"
-ENV MAVEN_HOME=/opt/maven
-ENV M2_HOME=${MAVEN_HOME}
-#-----------------------------------------------------------------------------------------------------------------------------------------------------
-ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
+ENV PATH=$JAVA_HOME/bin:$PATH
 
-RUN curl -o /tmp/maven.tar.gz ${MAVEN_DOWNLOAD} \
-    && tar -xzvf /tmp/maven.tar.gz -C /opt \
-    && mv /opt/apache-maven-${MAVEN_VERSION} ${MAVEN_HOME}
-#-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-ENV PATH=$JAVA_HOME/bin:${M2_HOME}/bin:$PATH
-
-#-----------------------------------------------------------------------------------------------------------------------------------------------------
-ARG MAVEN_LOCAL_REPO=${ATS_USER_HOME}.m2/repository
-#-----------------------------------------------------------------------------------------------------------------------------------------------------
-RUN echo "<settings><localRepository>${MAVEN_LOCAL_REPO}</localRepository></settings>" > /opt/maven/settings.xml
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=org.codehaus.mojo:exec-maven-plugin:3.4.1
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=org.codehaus.mojo:properties-maven-plugin:1.2.1
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=org.apache.maven.plugins:maven-resources-plugin:3.3.1
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=org.apache.maven.plugins:maven-compiler-plugin:3.13.0
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=commons-io:commons-io:2.16.1
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=org.apache.maven.plugins:maven-surefire-plugin:3.4.0
-RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=org.apache.maven.surefire:surefire-testng:3.4.0
-
-RUN rm -rf ${MAVEN_LOCAL_REPO}/dom4j 
-RUN rm -rf ${MAVEN_LOCAL_REPO}/org/apache/maven/shared/maven-shared-utils/3.1.0
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
