@@ -1,44 +1,64 @@
 # Dockerfile
 # syntax=docker/dockerfile:1
+FROM actiontestscript/linux-browsers
 
-FROM ubuntu:jammy
+ARG DOWNLOAD_WEB=https://actiontestscript.org/
 
-RUN apt-get update  
-RUN apt-get install -y libfreetype6 
-RUN apt-get install -y git 
-RUN apt-get install -y curl 
-RUN apt-get install -y bzip2 
-RUN apt-get install -y zip
-RUN apt-get install -y unzip 
-RUN apt-get install -y --no-install-recommends nvi
-RUN apt-get install -y psmisc
-RUN apt-get install -y iproute2 
+ARG ATS_PROJECTS=${ATS_USER_HOME}projects/
+ARG ATS_OUTPUTS=${ATS_USER_HOME}outputs/
+ARG ATS_CACHE=${ATS_USER_HOME}ats/cache/
+ARG ATS_PROFILES=${ATS_USER_HOME}ats/profiles/
 
-ARG MAVEN_VERSION="3.9.6"
-ARG MAVEN_DOWNLOAD="https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" 
+ARG PATH_DRIVERS=releases/ats-drivers/linux/system/
+ARG PATH_LIBS=releases/ats-libs/
+ARG PATH_TOOLS_LIBS=tools/jdk/linux/
 
-RUN curl -o /tmp/maven.tar.gz ${MAVEN_DOWNLOAD} \
-    && tar -xzvf /tmp/maven.tar.gz -C /opt \
-    && mv /opt/apache-maven-${MAVEN_VERSION} /opt/maven 
-	
-ARG JDK_VERSION="21.0.2"
-ARG JDK_DOWNLOAD="https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz"
-	
-RUN cd /tmp \
-    && curl -o openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz ${JDK_DOWNLOAD} \
-    && tar -xzvf openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz \
-    && mv jdk-${JDK_VERSION} /usr/bin 
+#-------------------------------------------------------------#
+#  Ats components versions
+#-------------------------------------------------------------#
+ARG ATS_LIB_VERSION="3.3.3"
+ARG ATS_DRIVER_VERSION="1.8.6"
+#-------------------------------------------------------------#
 
-#RUN deluser --remove-home ubuntu 
-RUN  rm -rf /tmp/* \
-  && apt-get autoremove \
-  && apt-get clean 
+ENV ATS_VERSION=$ATS_LIB_VERSION
+ENV ATS_DRIVER_VERSION=$ATS_DRIVER_VERSION
+ENV ATS_CACHE=$ATS_CACHE
+ENV ATS_TOOLS=${ATS_USER_HOME}ats/tools/
+ENV ATS_HOME=${ATS_USER_HOME}ats/cache/$ATS_LIB_VERSION
 
-# Define env variables for Java
+#RUN mvn dependency:get -Dmaven.repo.local=${MAVEN_LOCAL_REPO} -DremoteRepositories=https://repo1.maven.org/maven2 -Dartifact=com.actiontestscript:ats-automated-testing:$ATS_LIB_VERSION
 
-ENV JAVA_HOME /usr/bin/jdk-${JDK_VERSION}
-ENV JAVA_VERSION ${JDK_VERSION}
-ENV M2_HOME /opt/maven
-ENV MAVEN_HOME /opt/maven
-ENV PATH $JAVA_HOME/bin:${M2_HOME}/bin:$PATH
-ENV DOCKER=true
+#Install Ats Components
+RUN mkdir -p ${ATS_CACHE}${ATS_LIB_VERSION}/drivers \
+  && curl -L -o /tmp/ld.tgz ${DOWNLOAD_WEB}${PATH_DRIVERS}${ATS_DRIVER_VERSION}.tgz \
+  && tar -xzvf /tmp/ld.tgz -C ${ATS_CACHE}${ATS_LIB_VERSION}/drivers \
+  && rm -rf /tmp/* 
+
+RUN mkdir -p ${ATS_CACHE}${ATS_LIB_VERSION}/libs \
+  && curl -L -o /tmp/atslibs.zip ${DOWNLOAD_WEB}${PATH_LIBS}${ATS_LIB_VERSION}.zip \
+  && unzip /tmp/atslibs.zip -d ${ATS_CACHE}${ATS_LIB_VERSION}/libs \
+  && rm -rf /tmp/* 
+
+RUN mkdir -p ${ATS_TOOLS}
+RUN ln -s ${JAVA_HOME} ${ATS_TOOLS}
+
+RUN cd ${ATS_CACHE}${ATS_LIB_VERSION}/drivers  \
+&& ./linuxdriver --allWebDriver=true 
+ 
+RUN mkdir -p ${ATS_PROFILES} && mkdir -p ${ATS_PROJECTS} && mkdir -p ${ATS_OUTPUTS} 
+
+RUN chown -R ${ATS_USER}:${ATS_GROUP} ${ATS_USER_HOME}
+
+ARG START_MESSAGE="Start ATS-Docker with user: $(whoami)"
+
+ENV ENV=/etc/env.sh
+
+RUN rm -rf /home/${ATS_USER}/.m2
+RUN rm -rf /dom4j
+
+RUN echo echo ${START_MESSAGE} >> "${ENV}"
+RUN echo echo ${START_MESSAGE} >> .bashrc
+RUN echo echo ${START_MESSAGE} >> /home/ats-user/.bashrc
+
+USER ats-user
+WORKDIR /home/ats-user/ats-project/
